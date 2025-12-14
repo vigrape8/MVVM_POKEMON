@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".pokemonsFragment"
-    android:background="#AEE7B1">
+    android:background="#3A4B56">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvPokemons"

@@ -8,7 +8,7 @@
     <fragment
         android:id="@+id/pokemonsFragment"
         android:name="com.example.pokemon.pokemonsFragment"
-        android:label="fragment_pokemons"
+        android:label="Pokedex"
         tools:layout="@layout/fragment_pokemons" >
         <action
             android:id="@+id/action_pokemonsFragment_to_detallePokemonFragment"
@@ -17,6 +17,6 @@
     <fragment
         android:id="@+id/detallePokemonFragment"
         android:name="com.example.pokemon.detallePokemonFragment"
-        android:label="fragment_detalle_pokemon"
+        android:label="Detalles"
         tools:layout="@layout/fragment_detalle_pokemon" />
 </navigation>
