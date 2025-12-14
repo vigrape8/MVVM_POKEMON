@@ -6,29 +6,29 @@ import androidx.lifecycle.ViewModel
 import com.example.pokemon.Model.Pokemon
 import com.example.pokemon.Repository.PokemonRepository
 
-class PokemonViewModel: ViewModel() {
+class PokemonViewModel : ViewModel() {
     //Inicializar el repository
-    private val repository: PokemonRepository= PokemonRepository()
+    private val repository: PokemonRepository = PokemonRepository()
 
     //LiveData para la lista de pokemons
-    private val _pokemones= MutableLiveData<List<Pokemon>?>()
+    private val _pokemones = MutableLiveData<List<Pokemon>?>()
     val pokemones: LiveData<List<Pokemon>> = _pokemones as LiveData<List<Pokemon>>
 
     //LiveData para el pokemon seleccionado
-    private val _pokemonSeleccionado= MutableLiveData<Pokemon?>()
+    private val _pokemonSeleccionado = MutableLiveData<Pokemon?>()
     val pokemonSeleccionado: LiveData<Pokemon?> = _pokemonSeleccionado
 
     //Inicializar los datos
-    init{
-        _pokemones.value=repository.getPokemons()
+    init {
+        _pokemones.value = repository.getPokemons()
     }
 
-    fun seleccionarPokemon(pokemon: Pokemon?){
-        _pokemones.value= pokemon as List<Pokemon>?
+    fun seleccionarPokemon(pokemon: Pokemon?) {
+        _pokemonSeleccionado.value = pokemon
     }
 
-    fun borrarPokemon(pokemon:Pokemon?){
+    fun borrarPokemon(pokemon: Pokemon?) {
         repository.eliminarPokemon(pokemon)
-        _pokemones.value=repository.getPokemons()
+        _pokemones.value = repository.getPokemons()
     }
-    }
+}

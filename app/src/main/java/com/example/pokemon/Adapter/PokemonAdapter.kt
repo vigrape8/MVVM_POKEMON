@@ -36,7 +36,9 @@ class PokemonAdapter(
     //rellena los datos en el ViewHolder que corresponde a la posicion
     override fun onBindViewHolder(holder: PokemonViewHolder, position: Int) {
         val pokemon=pokemones!![position]
-        holder.binding.ivNumero.id=pokemon.numeroPk
+        //cambiar a 001
+        val numeroFormateado = String.format("#%03d", pokemon.numeroPk)
+        holder.binding.tvNumero.text = numeroFormateado
         holder.binding.tvNombre.text=pokemon.nombre
         holder.binding.ivPokemon.setImageResource(pokemon.imagen)
         //ir al fragmento detalle
