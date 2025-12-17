@@ -7,6 +7,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemon.Adapter.PokemonAdapter
 import com.example.pokemon.Model.Pokemon
 import com.example.pokemon.ViewModel.PokemonViewModel
@@ -37,6 +39,31 @@ class pokemonsFragment : Fragment() {
         //configurar recyclerview
         binding.rvPokemons.adapter=adapter
         binding.rvPokemons.layoutManager= GridLayoutManager(requireContext(),2)
+        eventoEliminarElto()
         viewModel?.pokemones?.observe(getViewLifecycleOwner(),{lista->adapter.establecerLista(lista as MutableList<Pokemon>?)})
+    }
+    private fun eventoEliminarElto() {
+        val callback = object : ItemTouchHelper.SimpleCallback(
+            0, // No se permite mover (drag)
+            ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT // Permite deslizar hacia ambos lados
+        ) {
+            override fun onMove(
+                recyclerView: RecyclerView,
+                viewHolder: RecyclerView.ViewHolder,
+                target: RecyclerView.ViewHolder
+            ): Boolean {
+                return false // No necesitamos movimiento (drag & drop)
+            }
+
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.bindingAdapterPosition
+
+                if (position != RecyclerView.NO_POSITION) {
+                    // Pedimos al ViewModel que elimine el pokemon de esa posición
+                    viewModel?.borrarPokemon(position)
+                }
+            }
+        }
+        ItemTouchHelper(callback).attachToRecyclerView(binding.rvPokemons)
     }
 }

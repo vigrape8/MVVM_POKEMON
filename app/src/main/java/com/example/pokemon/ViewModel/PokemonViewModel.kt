@@ -27,8 +27,20 @@ class PokemonViewModel : ViewModel() {
         _pokemonSeleccionado.value = pokemon
     }
 
-    fun borrarPokemon(pokemon: Pokemon?) {
-        repository.eliminarPokemon(pokemon)
-        _pokemones.value = repository.getPokemons()
+    fun borrarPokemon(posicion: Int) {
+        val listaActual = _pokemones.value
+
+        // Comprobamos que la lista existe y que la posición es válida
+        if (listaActual != null && posicion in listaActual.indices) {
+
+            // Recuperamos el pokemon que queremos eliminar
+            val eliminado = listaActual[posicion]
+
+            // Lo eliminamos del repositorio (fuente de datos)
+            repository.eliminarPokemon(eliminado)
+
+            // Actualizamos el LiveData con la nueva lista
+            _pokemones.value = repository.getPokemons()
+        }
     }
 }
