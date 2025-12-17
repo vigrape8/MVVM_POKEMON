@@ -41,6 +41,12 @@ class PokemonAdapter(
         holder.binding.tvNumero.text = numeroFormateado
         holder.binding.tvNombre.text=pokemon.nombre
         holder.binding.ivPokemon.setImageResource(pokemon.imagen)
+        //establecemos el favorito
+        establecerIconoFavorito(pokemon, holder)
+        //cambiamos la estrella al clickar
+        holder.binding.iconFavorite.setOnClickListener {
+            marcarFavorito(pokemon, holder)
+        }
         //ir al fragmento detalle
         holder.itemView.setOnClickListener {v ->
             //guarda el pokemon en el viewmodel
@@ -63,13 +69,28 @@ class PokemonAdapter(
 
     // Clase interna ViewHolder que representa un solo elemento con ViewBinding
     class PokemonViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // Objeto de enlace al layout viewholder_animal.xml
         var binding: ViewholderPokemonBinding
 
         // El constructor recibe la vista del layout inflado
         init {
             // Asociamos el objeto binding con la vista
             binding = ViewholderPokemonBinding.bind(itemView)
+        }
+    }
+
+    private fun marcarFavorito(pokemon: Pokemon, holder: PokemonViewHolder?) {
+        // Cambiamos el estado del pokemon
+        pokemon.favorito = !pokemon.favorito
+
+        establecerIconoFavorito(pokemon, holder)
+
+        viewModel?.actualizarPokemon(pokemon)
+    }
+    private fun establecerIconoFavorito(pokemon: Pokemon, holder: PokemonViewHolder?) {
+        if (pokemon.favorito) {
+            holder?.binding?.iconFavorite?.setImageResource(android.R.drawable.btn_star_big_on)
+        } else {
+            holder?.binding?.iconFavorite?.setImageResource(android.R.drawable.btn_star_big_off)
         }
     }
 }

@@ -5,6 +5,7 @@ data class Pokemon(
     val numeroPk:Int,
     val nombre: String,
     val imagen: Int,
-    val descripcion:String
+    val descripcion:String,
+    var favorito: Boolean
 ): Serializable
 

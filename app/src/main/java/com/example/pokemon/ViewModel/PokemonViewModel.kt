@@ -26,7 +26,10 @@ class PokemonViewModel : ViewModel() {
     fun seleccionarPokemon(pokemon: Pokemon?) {
         _pokemonSeleccionado.value = pokemon
     }
-
+    fun actualizarPokemon(pokemon: Pokemon) {
+        repository.actualizarPokemon(pokemon)
+        _pokemones.value = repository.getPokemons()
+    }
     fun borrarPokemon(posicion: Int) {
         val listaActual = _pokemones.value
 
