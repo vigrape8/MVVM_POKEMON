@@ -19,4 +19,13 @@
         android:name="com.example.pokemon.detallePokemonFragment"
         android:label="Detalles"
         tools:layout="@layout/fragment_detalle_pokemon" />
+    <fragment
+        android:id="@+id/favPokemonFragment"
+        android:name="com.example.pokemon.favPokemonFragment"
+        android:label="Favoritos"
+        tools:layout="@layout/fragment_fav_pokemon" >
+        <action
+            android:id="@+id/action_favPokemonFragment_to_detallePokemonFragment"
+            app:destination="@id/detallePokemonFragment" />
+    </fragment>
 </navigation>

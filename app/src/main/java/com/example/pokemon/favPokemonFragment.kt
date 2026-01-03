@@ -12,19 +12,20 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.pokemon.Adapter.PokemonAdapter
 import com.example.pokemon.Model.Pokemon
 import com.example.pokemon.ViewModel.PokemonViewModel
-import com.example.pokemon.databinding.FragmentPokemonsBinding
 import androidx.appcompat.widget.SearchView
-class pokemonsFragment : Fragment() {
+import com.example.pokemon.databinding.FragmentFavPokemonBinding
+
+class favPokemonFragment : Fragment() {
 
     private var viewModel: PokemonViewModel?=null
-    private lateinit var binding: FragmentPokemonsBinding
+    private lateinit var binding: FragmentFavPokemonBinding
     private lateinit var adapter: PokemonAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding= FragmentPokemonsBinding.inflate(inflater,container,false)
+        binding= FragmentFavPokemonBinding.inflate(inflater,container,false)
         return binding.root
     }
 
@@ -34,12 +35,14 @@ class pokemonsFragment : Fragment() {
         viewModel= ViewModelProvider(requireActivity()).get(PokemonViewModel::class.java)
         //inicializar adapter
         adapter= PokemonAdapter(requireContext(),
-            ArrayList<Pokemon?>() as ArrayList<Pokemon>? as ArrayList<Pokemon?>?,viewModel,R.id.action_pokemonsFragment_to_detallePokemonFragment)
+            ArrayList<Pokemon?>() as ArrayList<Pokemon>? as ArrayList<Pokemon?>?,viewModel,R.id.action_favPokemonFragment_to_detallePokemonFragment)
         //configurar recyclerview
         binding.rvPokemons.adapter=adapter
         binding.rvPokemons.layoutManager= GridLayoutManager(requireContext(),2)
         //eliminar pokemon
         eventoEliminarElto()
+        //Solo cogemos los favoritos
+        viewModel?.cargarFavoritos()
         //actualizar lista
         viewModel?.pokemones?.observe(getViewLifecycleOwner(),{lista->adapter.establecerLista(lista as MutableList<Pokemon>?)})
         //Buscar por nombre
@@ -48,9 +51,9 @@ class pokemonsFragment : Fragment() {
                 return false
             }
             override fun onQueryTextChange(newText: String?): Boolean {
-                viewModel?.buscarPokemonPorNombre(newText?: "")
+                viewModel?.buscarEnFavoritos(newText?: "")
                 return true
-                }
+            }
         })
     }
     private fun eventoEliminarElto() {
@@ -71,7 +74,7 @@ class pokemonsFragment : Fragment() {
 
                 if (position != RecyclerView.NO_POSITION) {
                     // Pedimos al ViewModel que elimine el pokemon de esa posición
-                    viewModel?.borrarPokemon(position)
+                    viewModel?.borrarPokemon(position,esPantallaFav=true)
                 }
             }
         }

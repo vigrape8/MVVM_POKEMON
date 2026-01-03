@@ -15,7 +15,8 @@ import com.example.pokemon.databinding.ViewholderPokemonBinding
 class PokemonAdapter(
     context: Context?,
     pokemons: ArrayList<Pokemon?>?, // Recibimos la lista inicial
-    viewModel: PokemonViewModel?
+    viewModel: PokemonViewModel?,
+    private val destinoId: Int //Para saber en que fragment estamos
 
 ) : RecyclerView.Adapter<PokemonAdapter.PokemonViewHolder>(){
     private var pokemones: MutableList<Pokemon>?
@@ -43,19 +44,22 @@ class PokemonAdapter(
         holder.binding.ivPokemon.setImageResource(pokemon.imagen)
         //establecemos el favorito
         establecerIconoFavorito(pokemon, holder)
+
         //cambiamos la estrella al clickar
         holder.binding.iconFavorite.setOnClickListener {
             marcarFavorito(pokemon, holder)
         }
+
         //ir al fragmento detalle
         holder.itemView.setOnClickListener {v ->
             //guarda el pokemon en el viewmodel
             viewModel?.seleccionarPokemon(pokemon)
             //pasamos al fragmento detalle
             val navController=findNavController(v)
-            navController.navigate(R.id.action_pokemonsFragment_to_detallePokemonFragment)
+            navController.navigate(destinoId)
         }
     }
+
     //cuantos elementos hay en la lista
     override fun getItemCount(): Int {
         return if(pokemones!=null) pokemones!!.size else 0
