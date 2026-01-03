@@ -15,25 +15,52 @@ class PokemonRepository {
         listaPokemon.add(Pokemon(8,"Wartortle",R.drawable.wartortle,"Tiene una cola larga y peluda que simboliza la longevidad y lo hace popular entre los mayores.",false))
         listaPokemon.add(Pokemon(9,"Blastoise",R.drawable.blastoise,"Aumenta de peso deliberadamente para contrarrestar la fuerza de los chorros de agua que dispara.",false))
     }
+    //Devuelve todos los pokemon
     fun getPokemon(position: Int): Pokemon?{
         if (position>=0 && position<listaPokemon.size){
             return listaPokemon.get(position)
         }
         return null
     }
+    //devuelve pokemon por posicion
     fun getPokemons(): MutableList<Pokemon>{
         return listaPokemon
     }
+    //elimina el pokemon
     fun eliminarPokemon(pokemon: Pokemon?){
         listaPokemon.remove(pokemon)
     }
+    //actualiza la lista
     fun actualizarPokemon(pokemon: Pokemon) {
         // Buscamos la posición del pokemon en la lista actual
         val posicion = listaPokemon.indexOfFirst { it.numeroPk == pokemon.numeroPk }
-        // Si el pokemon existe en la lista (index != -1)
+        // Si el pokemon existe en la lista
         if (posicion != -1) {
             // Reemplazamos el pokemon antiguo por el modificado
             listaPokemon[posicion] = pokemon
         }
+    }
+    //Obtiene el pokemon por nombre
+    fun getPokemonPorNombre(nombre: String?): MutableList<Pokemon>{
+        //Creamos la lista del resultado vacia
+        val resultado=mutableListOf<Pokemon>()
+        //recorremos la lista de pokemon y si coincide devuelve el resultado
+        for(pokemon in listaPokemon){
+            if(pokemon.nombre.lowercase().contains(nombre?.lowercase() ?: "")){
+                resultado.add(pokemon)
+            }
+        }
+        return resultado
+    }
+    //Obtiene el favorito
+    fun getPokemonsFavoritos(): MutableList<Pokemon>{
+        val listafav=mutableListOf<Pokemon>()
+        //Recorre la lista y si hay algun pokemon marcado como favorito lo añade a la nueva lista
+        for(pokemon in listaPokemon){
+            if(pokemon.favorito){
+                listafav.add(pokemon)
+            }
+        }
+        return listafav
     }
 }

@@ -9,6 +9,8 @@ import com.example.pokemon.Repository.PokemonRepository
 class PokemonViewModel : ViewModel() {
     //Inicializar el repository
     private val repository: PokemonRepository = PokemonRepository()
+    //arreglo para que actualice la lista en caso de seleccionar un fav dentro de la busqueda
+    private var listaActualizada: String=""
 
     //LiveData para la lista de pokemons
     private val _pokemones = MutableLiveData<List<Pokemon>?>()
@@ -20,17 +22,44 @@ class PokemonViewModel : ViewModel() {
 
     //Inicializar los datos
     init {
+        cargarTodos()
+    }
+
+    fun cargarTodos(){
+        listaActualizada=""
         _pokemones.value = repository.getPokemons()
+    }
+
+    //Cargar lista favoritos
+    fun cargarFavoritos() {
+        listaActualizada = ""
+        _pokemones.value = repository.getPokemonsFavoritos()
     }
 
     fun seleccionarPokemon(pokemon: Pokemon?) {
         _pokemonSeleccionado.value = pokemon
     }
-    fun actualizarPokemon(pokemon: Pokemon) {
+    //Actualiza en base a la lista que este seleccionada
+    fun actualizarPokemon(pokemon: Pokemon,esPantallaFav:Boolean=false) {
         repository.actualizarPokemon(pokemon)
-        _pokemones.value = repository.getPokemons()
+        //modificado para actualizar la lista en caso de que haya busqueda o no
+        //si estamos en la pantalla fav cargamos la lista de fav
+        if(esPantallaFav){
+            if(listaActualizada.isEmpty()){
+                cargarFavoritos()
+            }else{
+                buscarEnFavoritos(listaActualizada)
+            }
+        }else{//si no carga normal
+            if(listaActualizada.isEmpty()){
+                cargarTodos()
+            }else{
+                buscarPokemonPorNombre(listaActualizada)
+            }
+        }
+
     }
-    fun borrarPokemon(posicion: Int) {
+    fun borrarPokemon(posicion: Int,esPantallaFav: Boolean=false) {
         val listaActual = _pokemones.value
 
         // Comprobamos que la lista existe y que la posición es válida
@@ -39,11 +68,46 @@ class PokemonViewModel : ViewModel() {
             // Recuperamos el pokemon que queremos eliminar
             val eliminado = listaActual[posicion]
 
-            // Lo eliminamos del repositorio (fuente de datos)
+            // Lo eliminamos del repositorio
             repository.eliminarPokemon(eliminado)
 
-            // Actualizamos el LiveData con la nueva lista
-            _pokemones.value = repository.getPokemons()
+            //modificado para actualizar la lista en caso de que haya busqueda o no
+            if(esPantallaFav){
+                if(listaActualizada.isEmpty()){
+                    cargarFavoritos()
+                }else{
+                    buscarEnFavoritos(listaActualizada)
+                }
+            }else{//si no carga normal
+                if(listaActualizada.isEmpty()){
+                    cargarTodos()
+                }else{
+                    buscarPokemonPorNombre(listaActualizada)
+                }
+            }
+        }
+    }
+    fun buscarPokemonPorNombre(nombre: String?){
+        if (nombre != null) {
+            listaActualizada=nombre
+        }
+        _pokemones.value=repository.getPokemonPorNombre(nombre)
+    }
+
+    //Si encuentra pokemons dentro de la lista de favoritos los muestra
+    fun buscarEnFavoritos(nombre: String) {
+        listaActualizada = nombre
+        val listaFavs = repository.getPokemonsFavoritos()
+        if (nombre.isEmpty()) {
+            _pokemones.value = listaFavs
+        } else {
+            var resultado=mutableListOf<Pokemon>()
+            for(pokemon in listaFavs){
+                if(pokemon.nombre.lowercase().contains(nombre.lowercase())){
+                    resultado.add(pokemon)
+                }
+            }
+            _pokemones.value=resultado
         }
     }
 }

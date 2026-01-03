@@ -6,14 +6,14 @@
     android:layout_height="match_parent"
     android:background="#3A4B56"
     android:orientation="vertical"
-    tools:context=".pokemonsFragment">
+    tools:context=".favPokemonFragment">
 
     <androidx.appcompat.widget.SearchView
         android:id="@+id/search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:iconifiedByDefault="false"
-        app:queryHint="Buscar Pokemon"
+        app:queryHint="Buscar en Favoritos"
         app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <androidx.recyclerview.widget.RecyclerView
