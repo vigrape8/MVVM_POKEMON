@@ -74,7 +74,7 @@ class favPokemonFragment : Fragment() {
 
                 if (position != RecyclerView.NO_POSITION) {
                     // Pedimos al ViewModel que elimine el pokemon de esa posición
-                    viewModel?.borrarPokemon(position,esPantallaFav=true)
+                    viewModel?.borrarPokemon(position)
                 }
             }
         }

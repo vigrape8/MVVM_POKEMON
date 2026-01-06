@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/favPokemonFragment"
-        android:icon="@drawable/staryu"
+        android:icon="@drawable/staryu1"
         android:title="Favoritos"
         app:showAsAction="always"
          />

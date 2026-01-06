@@ -11,7 +11,8 @@ class PokemonViewModel : ViewModel() {
     private val repository: PokemonRepository = PokemonRepository()
     //arreglo para que actualice la lista en caso de seleccionar un fav dentro de la busqueda
     private var listaActualizada: String=""
-
+    //arreglo para saber en que fragment estamos al actualizar la lista
+    private var pantallaFav:Boolean=false
     //LiveData para la lista de pokemons
     private val _pokemones = MutableLiveData<List<Pokemon>?>()
     val pokemones: LiveData<List<Pokemon>> = _pokemones as LiveData<List<Pokemon>>
@@ -26,12 +27,14 @@ class PokemonViewModel : ViewModel() {
     }
 
     fun cargarTodos(){
+        pantallaFav=false
         listaActualizada=""
         _pokemones.value = repository.getPokemons()
     }
 
     //Cargar lista favoritos
     fun cargarFavoritos() {
+        pantallaFav=true
         listaActualizada = ""
         _pokemones.value = repository.getPokemonsFavoritos()
     }
@@ -40,11 +43,11 @@ class PokemonViewModel : ViewModel() {
         _pokemonSeleccionado.value = pokemon
     }
     //Actualiza en base a la lista que este seleccionada
-    fun actualizarPokemon(pokemon: Pokemon,esPantallaFav:Boolean=false) {
+    fun actualizarPokemon(pokemon: Pokemon) {
         repository.actualizarPokemon(pokemon)
         //modificado para actualizar la lista en caso de que haya busqueda o no
         //si estamos en la pantalla fav cargamos la lista de fav
-        if(esPantallaFav){
+        if(pantallaFav){
             if(listaActualizada.isEmpty()){
                 cargarFavoritos()
             }else{
@@ -59,7 +62,7 @@ class PokemonViewModel : ViewModel() {
         }
 
     }
-    fun borrarPokemon(posicion: Int,esPantallaFav: Boolean=false) {
+    fun borrarPokemon(posicion: Int) {
         val listaActual = _pokemones.value
 
         // Comprobamos que la lista existe y que la posición es válida
@@ -72,7 +75,7 @@ class PokemonViewModel : ViewModel() {
             repository.eliminarPokemon(eliminado)
 
             //modificado para actualizar la lista en caso de que haya busqueda o no
-            if(esPantallaFav){
+            if(pantallaFav){
                 if(listaActualizada.isEmpty()){
                     cargarFavoritos()
                 }else{
@@ -88,6 +91,7 @@ class PokemonViewModel : ViewModel() {
         }
     }
     fun buscarPokemonPorNombre(nombre: String?){
+        pantallaFav=false
         if (nombre != null) {
             listaActualizada=nombre
         }
@@ -96,6 +100,7 @@ class PokemonViewModel : ViewModel() {
 
     //Si encuentra pokemons dentro de la lista de favoritos los muestra
     fun buscarEnFavoritos(nombre: String) {
+        pantallaFav=true
         listaActualizada = nombre
         val listaFavs = repository.getPokemonsFavoritos()
         if (nombre.isEmpty()) {
